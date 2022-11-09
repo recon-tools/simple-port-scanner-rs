@@ -1,0 +1,22 @@
+[workspace]
+members = [
+    "crates/cli",
+    "crates/scanner",
+]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Ervin Szilagyi"]
+edition = "2021"
+license = "MIT"
+homepage = "https://github.com/domain-recon/port-scanner-rs"
+repository = "https://github.com/domain-recon/port-scanner-rs"
+keywords = ["port", "scanner"]
+description = "Cargo subcommand to work with AWS Lambda"
+rust-version = "1.64.0"
+
+[workspace.dependencies]
+scanner = {version = "0.1.0", path = "crates/scanner"}
+
+[profile.release]
+strip = "symbols"
