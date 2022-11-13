@@ -1,10 +1,13 @@
+mod scantype;
+
 use netscan::blocking::PortScanner;
-use netscan::setting::{Destination, ScanType};
+use netscan::setting::Destination;
 use network_interface::NetworkInterfaceConfig;
 use network_interface::{Addr, NetworkInterface};
 use std::net::IpAddr;
 use std::time::Duration;
 
+pub use self::scantype::ScanTypeInput;
 use anyhow::anyhow;
 use netscan::result::PortStatus;
 
@@ -12,6 +15,7 @@ pub fn scan(
     device_name: String,
     target: String,
     port_range: Vec<u16>,
+    scan_type: ScanTypeInput,
 ) -> Result<(), anyhow::Error> {
     let addr = get_network_interface_address(&device_name)
         .ok_or(anyhow!("Invalid device name {device_name}"))?;
@@ -27,7 +31,7 @@ pub fn scan(
     port_scanner.add_destination(destination);
 
     // Set options
-    port_scanner.set_scan_type(ScanType::TcpSynScan);
+    port_scanner.set_scan_type(scan_type.convert());
     port_scanner.set_timeout(Duration::from_millis(10000));
     port_scanner.set_wait_time(Duration::from_millis(100));
     //port_scanner.set_send_rate(Duration::from_millis(1));
@@ -75,6 +79,5 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-    }
+    fn it_works() {}
 }
