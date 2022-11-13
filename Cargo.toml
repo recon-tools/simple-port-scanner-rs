@@ -12,11 +12,12 @@ license = "MIT"
 homepage = "https://github.com/domain-recon/port-scanner-rs"
 repository = "https://github.com/domain-recon/port-scanner-rs"
 keywords = ["port", "scanner"]
-description = "Cargo subcommand to work with AWS Lambda"
+description = "Simple port scanner."
 rust-version = "1.64.0"
 
 [workspace.dependencies]
 scanner = {version = "0.1.0", path = "crates/scanner"}
+anyhow = { version = "1.0.66" }
 
 [profile.release]
 strip = "symbols"

@@ -1,5 +1,5 @@
 [package]
-name = "smp"
+name = "sps"
 readme = "../../README.md"
 rust-version.workspace = true
 version.workspace = true
@@ -12,5 +12,6 @@ keywords.workspace = true
 description.workspace = true
 
 [dependencies]
-clap = "4.0.19"
 scanner.workspace = true
+clap = { version = "4.0.18", features = ["derive"] }
+anyhow = { workspace = true }
