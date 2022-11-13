@@ -17,3 +17,4 @@ description.workspace = true
 netscan = "0.12.0"
 network-interface = "0.1.4"
 anyhow = { workspace = true }
+clap = { workspace = true }

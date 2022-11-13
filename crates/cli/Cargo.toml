@@ -13,5 +13,5 @@ description.workspace = true
 
 [dependencies]
 scanner.workspace = true
-clap = { version = "4.0.18", features = ["derive"] }
+clap = { workspace = true }
 anyhow = { workspace = true }

@@ -696,6 +696,7 @@ name = "scanner"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "clap",
  "netscan",
  "network-interface",
 ]
