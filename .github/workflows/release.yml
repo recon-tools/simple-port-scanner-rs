@@ -44,8 +44,6 @@ jobs:
         platform:
           - arch: x64
             target: x86_64-pc-windows-msvc
-          - arch: x86
-            target: i686-pc-windows-msvc
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
@@ -135,7 +133,6 @@ jobs:
         working-directory: target/github-release
         run: |
           make -f ../../Makefile build-release-zip tag=${{ github.ref_name }} target=windows-x64
-          make -f ../../Makefile build-release-zip tag=${{ github.ref_name }} target=windows-x86
       - name: Package MacOS files
         working-directory: target/github-release
         run: |
