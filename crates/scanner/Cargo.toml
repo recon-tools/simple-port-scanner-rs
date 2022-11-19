@@ -15,7 +15,7 @@ description.workspace = true
 
 [dependencies]
 netscan = "0.12.0"
+netstat2 = "0.9"
 network-interface = "0.1.4"
 cidr-utils = "0.5.9"
 anyhow = { workspace = true }
-clap = { workspace = true }

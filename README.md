@@ -23,7 +23,7 @@ Options:
 Example:
 
 ```bash
-$ sps --device en0 192.168.100.1/32 --port-range 1-500
+$ sps 192.168.100.1/32 --port-range 1-500
 192.168.100.1:53 - Open
 192.168.100.1:80 - Open
 Scan Time: 6.329893083s
