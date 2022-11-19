@@ -1,50 +1,56 @@
 mod scantype;
 
 use netscan::blocking::PortScanner;
-use netscan::setting::Destination;
+use netscan::setting::{Destination};
 use network_interface::NetworkInterfaceConfig;
 use network_interface::{Addr, NetworkInterface};
-use std::net::IpAddr;
+use std::str::FromStr;
 use std::time::Duration;
 
-pub use self::scantype::ScanTypeInput;
+use crate::scantype::ScanTypeInput;
 use anyhow::anyhow;
+use cidr_utils::cidr::IpCidr;
 use netscan::result::PortStatus;
 
 pub fn scan(
     device_name: String,
-    target: String,
+    target_cidr_str: String,
     port_range: Vec<u16>,
-    scan_type: ScanTypeInput,
+    scan_type: String,
 ) -> Result<(), anyhow::Error> {
     let addr = get_network_interface_address(&device_name)
         .ok_or(anyhow!("Invalid device name {device_name}"))?;
+    println!("{:?}", addr);
     let mut port_scanner = match PortScanner::new(addr.ip()) {
         Ok(scanner) => scanner,
         Err(e) => panic!("Error creating scanner: {}", e),
     };
 
-    let target_ip: IpAddr = target.as_str().parse::<IpAddr>()?;
+    let cidr = IpCidr::from_str(target_cidr_str)?;
+
     let (start_port, end_port): (u16, u16) = (port_range[0], port_range[1]);
-    let destination: Destination =
-        Destination::new_with_port_range(target_ip, start_port, end_port);
-    port_scanner.add_destination(destination);
+
+    for ip_addr in cidr.iter() {
+        let destination: Destination =
+            Destination::new_with_port_range(ip_addr, start_port, end_port);
+        port_scanner.add_destination(destination);
+    }
 
     // Set options
-    port_scanner.set_scan_type(scan_type.convert());
+    port_scanner.set_scan_type(ScanTypeInput::from_str(scan_type.as_str())?.convert());
     port_scanner.set_timeout(Duration::from_millis(10000));
-    port_scanner.set_wait_time(Duration::from_millis(100));
-    //port_scanner.set_send_rate(Duration::from_millis(1));
+    port_scanner.set_wait_time(Duration::from_millis(200));
+    port_scanner.set_send_rate(Duration::from_millis(10));
 
     // Run scan
     let result = port_scanner.scan();
 
-    println!("Status: {:?}", result.scan_status);
     println!("Results:");
+    println!("{:?}", result);
     for (ip, ports) in result.result_map {
         let open_ports = ports
             .iter()
-            .filter(|&port| matches!(port.status, PortStatus::Open))
+            .filter(|&port| !matches!(port.status, PortStatus::Closed))
             .collect::<Vec<_>>();
         for port in open_ports {
             println!("{}:{} - {:?}", ip, port.port, port.status);
