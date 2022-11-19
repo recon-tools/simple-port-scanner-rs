@@ -1,20 +1,19 @@
-mod router;
-mod scantype;
-
-use netscan::blocking::PortScanner;
-use netscan::setting::Destination;
-use network_interface::NetworkInterfaceConfig;
-use network_interface::{Addr, NetworkInterface};
 use std::str::FromStr;
 use std::time::Duration;
 
-use crate::scantype::ScanTypeInput;
 use anyhow::anyhow;
 use cidr_utils::cidr::IpCidr;
+use netscan::blocking::PortScanner;
 use netscan::result::PortStatus;
+use netscan::setting::Destination;
 
 use router::get_default_network_interface_address;
 use router::get_network_interface_address_by_name;
+
+use crate::scantype::ScanTypeInput;
+
+mod router;
+mod scantype;
 
 pub fn scan(
     device_name: String,

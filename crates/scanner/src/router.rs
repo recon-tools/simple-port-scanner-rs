@@ -1,15 +1,8 @@
-use netscan::blocking::PortScanner;
-use netscan::setting::Destination;
+use std::net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket};
+
+use anyhow::anyhow;
 use network_interface::NetworkInterfaceConfig;
 use network_interface::{Addr, NetworkInterface};
-use std::str::FromStr;
-use std::time::Duration;
-
-use crate::scantype::ScanTypeInput;
-use anyhow::anyhow;
-use cidr_utils::cidr::IpCidr;
-use netscan::result::PortStatus;
-use std::net::{IpAddr, Ipv4Addr, SocketAddr, UdpSocket};
 
 pub(crate) fn get_default_network_interface_address() -> Result<IpAddr, anyhow::Error> {
     let socket = UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0))?;
@@ -17,7 +10,7 @@ pub(crate) fn get_default_network_interface_address() -> Result<IpAddr, anyhow::
     let local_address = socket.local_addr()?;
     let result = match local_address {
         SocketAddr::V4(socket_address) => Ok(Ipv4Addr::from(*socket_address.ip())),
-        SocketAddr::V6(ip) => Err(anyhow!("IPv6 is not yet supported!")),
+        SocketAddr::V6(_) => Err(anyhow!("IPv6 is not yet supported!")),
     };
     Ok(IpAddr::V4(result?))
 }
