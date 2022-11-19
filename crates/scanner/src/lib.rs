@@ -1,7 +1,7 @@
 mod scantype;
 
 use netscan::blocking::PortScanner;
-use netscan::setting::{Destination};
+use netscan::setting::Destination;
 use network_interface::NetworkInterfaceConfig;
 use network_interface::{Addr, NetworkInterface};
 use std::str::FromStr;
