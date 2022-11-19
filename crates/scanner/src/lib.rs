@@ -18,10 +18,10 @@ pub fn scan(
     port_range: Vec<u16>,
     scan_type: String,
 ) -> Result<(), anyhow::Error> {
-    let addr = get_network_interface_address(&device_name)
+    let interface_address = get_network_interface_address(&device_name)
         .ok_or(anyhow!("Invalid device name {device_name}"))?;
-    println!("{:?}", addr);
-    let mut port_scanner = match PortScanner::new(addr.ip()) {
+
+    let mut port_scanner = match PortScanner::new(interface_address.ip()) {
         Ok(scanner) => scanner,
         Err(e) => panic!("Error creating scanner: {}", e),
     };
@@ -45,8 +45,6 @@ pub fn scan(
     // Run scan
     let result = port_scanner.scan();
 
-    println!("Results:");
-    println!("{:?}", result);
     for (ip, ports) in result.result_map {
         let open_ports = ports
             .iter()
