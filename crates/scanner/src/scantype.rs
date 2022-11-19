@@ -25,7 +25,7 @@ impl FromStr for ScanTypeInput {
         match input {
             "tcp-sync" => Ok(ScanTypeInput::TcpSync),
             "tcp-connect" => Ok(ScanTypeInput::TcpConnect),
-            _ => Err(anyhow!("input cannot be converted!")),
+            _ => Err(anyhow!("Invalid scan type input!")),
         }
     }
 }

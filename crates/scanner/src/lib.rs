@@ -1,3 +1,4 @@
+mod router;
 mod scantype;
 
 use netscan::blocking::PortScanner;
@@ -12,16 +13,22 @@ use anyhow::anyhow;
 use cidr_utils::cidr::IpCidr;
 use netscan::result::PortStatus;
 
+use router::get_default_network_interface_address;
+use router::get_network_interface_address_by_name;
+
 pub fn scan(
     device_name: String,
     target_cidr_str: String,
     port_range: Vec<u16>,
     scan_type: String,
 ) -> Result<(), anyhow::Error> {
-    let interface_address = get_network_interface_address(&device_name)
-        .ok_or(anyhow!("Invalid device name {device_name}"))?;
+    let interface_address = if device_name.is_empty() {
+        get_default_network_interface_address()?
+    } else {
+        get_network_interface_address_by_name(&device_name).ok_or(anyhow!(""))?
+    };
 
-    let mut port_scanner = match PortScanner::new(interface_address.ip()) {
+    let mut port_scanner = match PortScanner::new(interface_address) {
         Ok(scanner) => scanner,
         Err(e) => panic!("Error creating scanner: {}", e),
     };
@@ -57,25 +64,6 @@ pub fn scan(
     println!("Scan Time: {:?}", result.scan_time);
 
     Ok(())
-}
-
-fn get_network_interface_address(name: &String) -> Option<Addr> {
-    let network_interfaces = NetworkInterface::show().unwrap();
-    network_interfaces
-        .iter()
-        .filter(|&network_interface| {
-            let is_ipv4 = match network_interface.addr {
-                None => false,
-                Some(ip) => match ip {
-                    Addr::V4(_) => true,
-                    Addr::V6(_) => false,
-                },
-            };
-            is_ipv4
-        })
-        .find(|&network_interface| network_interface.name == *name)
-        .map(|network_interface| network_interface.addr)
-        .flatten()
 }
 
 #[cfg(test)]

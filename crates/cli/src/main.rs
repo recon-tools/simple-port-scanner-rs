@@ -9,7 +9,7 @@ struct ScannerArgs {
     address: String,
 
     /// Name of the network device to be used for scanning
-    #[clap(short, long, value_parser)]
+    #[clap(short, long, value_parser, default_value = "")]
     device: String,
 
     /// Port range to be scanned. Expects an interval delimited by a dash, for example: 1-1000
