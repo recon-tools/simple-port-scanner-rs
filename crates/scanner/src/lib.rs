@@ -7,13 +7,13 @@ use netscan::blocking::PortScanner;
 use netscan::result::PortStatus;
 use netscan::setting::Destination;
 
-use router::get_default_network_interface_address;
 use router::get_network_interface_address_by_name;
 
-use crate::scantype::ScanTypeInput;
+use crate::router::Router;
+use crate::scan_type::ScanTypeInput;
 
 mod router;
-mod scantype;
+mod scan_type;
 
 pub fn scan(
     device_name: String,
@@ -21,8 +21,11 @@ pub fn scan(
     port_range: Vec<u16>,
     scan_type: String,
 ) -> Result<(), anyhow::Error> {
+    let cidr = IpCidr::from_str(target_cidr_str)?;
+
     let interface_address = if device_name.is_empty() {
-        get_default_network_interface_address()?
+        let router = Router::new();
+        router.get_network_interface_address(cidr.first_as_ip_addr())?
     } else {
         get_network_interface_address_by_name(&device_name).ok_or(anyhow!(""))?
     };
@@ -31,8 +34,6 @@ pub fn scan(
         Ok(scanner) => scanner,
         Err(e) => panic!("Error creating scanner: {}", e),
     };
-
-    let cidr = IpCidr::from_str(target_cidr_str)?;
 
     let (start_port, end_port): (u16, u16) = (port_range[0], port_range[1]);
 

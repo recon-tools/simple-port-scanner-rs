@@ -19,3 +19,4 @@ netstat2 = "0.9"
 network-interface = "0.1.4"
 cidr-utils = "0.5.9"
 anyhow = { workspace = true }
+itertools = "0.10.5"
