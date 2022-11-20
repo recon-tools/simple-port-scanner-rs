@@ -112,6 +112,23 @@ impl Router {
     }
 }
 
+#[cfg(not(target_os = "macos"))]
+impl Router {
+    pub(crate) fn new() -> Router {
+        return Router {
+            ipv4_routes: vec![],
+            ipv6_routes: vec![]
+        };
+    }
+
+    pub(crate) fn get_network_interface_address(
+        &self,
+        _: IpAddr,
+    ) -> Result<IpAddr, anyhow::Error> {
+        get_default_network_interface_address()
+    }
+}
+
 pub(crate) fn get_default_network_interface_address() -> Result<IpAddr, anyhow::Error> {
     let socket = UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0))?;
     socket.connect("128.199.158.128:12345")?; // scanme.sh
