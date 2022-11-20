@@ -117,14 +117,11 @@ impl Router {
     pub(crate) fn new() -> Router {
         return Router {
             ipv4_routes: vec![],
-            ipv6_routes: vec![]
+            ipv6_routes: vec![],
         };
     }
 
-    pub(crate) fn get_network_interface_address(
-        &self,
-        _: IpAddr,
-    ) -> Result<IpAddr, anyhow::Error> {
+    pub(crate) fn get_network_interface_address(&self, _: IpAddr) -> Result<IpAddr, anyhow::Error> {
         get_default_network_interface_address()
     }
 }
