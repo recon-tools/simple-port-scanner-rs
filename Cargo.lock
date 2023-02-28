@@ -453,9 +453,9 @@ dependencies = [
 
 [[package]]
 name = "netscan"
-version = "0.12.0"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af99b44160d2177a4e4f16063859251d5818ad1b93acd1a1f1d684c9912bbda9"
+checksum = "fb0d13793208bf49c4b5e75be4d0eb32870edfb86dbde64cd37e9b1a345e772b"
 dependencies = [
  "async-io",
  "default-net",
